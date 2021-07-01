@@ -17,6 +17,7 @@ def window():
     text.setText("Hello world")
     text.move(180, 140)
 
+    # To show window
     my_window.show()
 
     # app.exec() runs the application while sys.exit ensures that process is finished
