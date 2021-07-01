@@ -28,6 +28,7 @@ def display_window():
 
     # To connect event to function use:
     my_button.clicked.connect(print_message)
+    # The clicked and other events are also called signals.
 
     my_window.show()
     sys.exit(app.exec())
