@@ -13,6 +13,7 @@ def window():
     my_window.setGeometry(x_position, y_position, width, height)
     my_window.setWindowTitle("My new window")
 
+    # Text in window is called a label.
     text = QtWidgets.QLabel(my_window)
     text.setText("Hello world")
     text.move(180, 140)
