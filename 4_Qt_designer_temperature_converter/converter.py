@@ -11,11 +11,30 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(545, 411)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+class UiMainWindow(object):
+    def __init__(self):
+        super(UiMainWindow, self).__init__()
+        self.centralwidget = None
+        self.groupBox = None
+        self.input_radio_1 = None
+        self.input_radio_2 = None
+        self.input_radio_3 = None
+        self.groupBox_2 = None
+        self.output_radio_1 = None
+        self.output_radio_2 = None
+        self.output_radio_3 = None
+        self.input_field = None
+        self.result = None
+        self.label_2 = None
+        self.result_label = None
+        self.calculate_button = None
+        self.input = 1
+        self.output = 2
+
+    def setup_ui(self, main_window):
+        main_window.setObjectName("MainWindow")
+        main_window.resize(545, 411)
+        self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(30, 120, 161, 131))
@@ -59,45 +78,76 @@ class Ui_MainWindow(object):
         self.calculate_button = QtWidgets.QPushButton(self.centralwidget)
         self.calculate_button.setGeometry(QtCore.QRect(30, 320, 110, 30))
         self.calculate_button.setObjectName("calculate_button")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 545, 27))
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        main_window.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslate_ui(main_window)
+        QtCore.QMetaObject.connectSlotsByName(main_window)
 
-    def retranslateUi(self, MainWindow):
+    def retranslate_ui(self, main_window):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        main_window.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.groupBox.setTitle(_translate("MainWindow", "From"))
         self.input_radio_1.setText(_translate("MainWindow", "Ce&lsius"))
+        self.input_radio_1.setChecked(True)
+        self.input_radio_1.toggled.connect(self.on_click)
         self.input_radio_2.setText(_translate("MainWindow", "Kel&vin"))
+        self.input_radio_2.toggled.connect(self.on_click)
         self.input_radio_3.setText(_translate("MainWindow", "Fah&renheit"))
+        self.input_radio_3.toggled.connect(self.on_click)
         self.groupBox_2.setTitle(_translate("MainWindow", "To"))
         self.output_radio_1.setText(_translate("MainWindow", "Celsi&us"))
+        self.output_radio_1.toggled.connect(self.on_click)
         self.output_radio_2.setText(_translate("MainWindow", "Kelvin"))
+        self.output_radio_2.setChecked(True)
+        self.output_radio_2.toggled.connect(self.on_click)
         self.output_radio_3.setText(_translate("MainWindow", "Fahrenheit"))
+        self.output_radio_3.toggled.connect(self.on_click)
         self.result.setText(_translate("MainWindow", "-"))
         self.label_2.setText(_translate("MainWindow", "Temperature converter"))
         self.result_label.setText(_translate("MainWindow", "Result:"))
         self.calculate_button.setText(_translate("MainWindow", "Calculate"))
-        self.calculate_button.clicked.connect(self.print_message)
+        self.calculate_button.clicked.connect(self.calculate)
 
-    def print_message(self):
-        text = self.input_field.text()
-        print("text: ", text)
+    def on_click(self):
+        if self.input_radio_1.isChecked():
+            self.input = 1
+        elif self.input_radio_2.isChecked():
+            self.input = 2
+        else:
+            self.input = 3
+
+        if self.output_radio_1.isChecked():
+            self.output = 1
+        elif self.output_radio_2.isChecked():
+            self.output = 2
+        else:
+            self.output = 3
+
+    def calculate(self):
+        input_temperature = float(self.input_field.text())
+
+        if self.input == self.output:
+            output_temperature = input_temperature
+        elif self.input == 1 and self.output == 2:
+            output_temperature = input_temperature + 273.15
+        elif self.input == 1 and self.output == 3:
+            output_temperature = (9 * input_temperature / 5) + 32
+        elif self.input == 2 and self.output == 1:
+            output_temperature = input_temperature - 273.15
+        elif self.input == 2 and self.output == 3:
+            output_temperature = 9 * (input_temperature - 273.15) / 5 + 32
+        else:
+            output_temperature = input_temperature
+
+        self.result.setText(str(output_temperature))
+        print(f"{input_temperature}, {self.input}, {self.output}")
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    main_window = QtWidgets.QMainWindow()
+    ui = UiMainWindow()
+    ui.setup_ui(main_window)
+    main_window.show()
     sys.exit(app.exec_())
